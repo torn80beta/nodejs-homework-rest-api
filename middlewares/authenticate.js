@@ -19,7 +19,7 @@ const authenticate = async (req, res, next) => {
       next(httpError(401));
     }
 
-    // Add user to request object
+    // Add user data to request object
     req.user = user;
 
     next();

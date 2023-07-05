@@ -11,13 +11,27 @@ const { Contact } = require('../../models/contact');
 const getAllContacts = async (req, res) => {
   // Same as: const owner = req.user._id;
   const { _id: owner } = req.user;
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, favorite } = req.query;
   const skip = (page - 1) * limit;
-  const allContacts = await Contact.find({ owner }, '-createdAt -updatedAt', {
-    skip,
-    limit,
-  }).populate('owner', 'name email');
-  res.json(allContacts);
+  let contacts;
+
+  if (Object.hasOwn(req.query, 'favorite')) {
+    contacts = await Contact.find(
+      { owner, favorite },
+      '-createdAt -updatedAt',
+      {
+        skip,
+        limit,
+      }
+    ).populate('owner', 'name email');
+  } else {
+    contacts = await Contact.find({ owner }, '-createdAt -updatedAt', {
+      skip,
+      limit,
+    }).populate('owner', 'name email');
+  }
+
+  res.json(contacts);
 };
 
 module.exports = getAllContacts;
