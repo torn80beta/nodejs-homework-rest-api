@@ -7,7 +7,8 @@ const authenticate = async (req, res, next) => {
   const { authorization = '' } = req.headers;
   const [bearer, token] = authorization.split(' ');
 
-  if (bearer !== 'Bearer') {
+  if (bearer !== 'Bearer' || !token) {
+    // console.log('There is no token');
     next(httpError(401));
   }
 
@@ -24,7 +25,7 @@ const authenticate = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log(error.message);
+    // console.log('ERROR');
     next(httpError(401));
   }
 };
