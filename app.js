@@ -14,6 +14,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 /* This checks if request body has correct json format */
 app.use(express.json());
+app.use(express.static('public'));
 
 /* Move this section to multer middlewares */
 
@@ -28,9 +29,10 @@ const multerConfig = multer.diskStorage({
   //   fileSize: 1048576,
   // },
   // If you ned to rename file on save, use this:
-  // filename: (req, file, cb) => {
-  //   cb(null, file.originalname);
-  // },
+  filename: (req, file, cb) => {
+    // cb - callBack function
+    cb(null, file.originalname);
+  },
 });
 
 const upload = multer({
@@ -48,13 +50,14 @@ app.use((req, res) => {
 
 /* Move upload.single('avatar') to auth router */
 
+// 'avatar' in a upload.single('avatar') determines from which field the multer should take the file
 app.post('/register', upload.single('avatar'), async (req, res) => {
   /* !!! Move this section to registerUser controller !!! */
   const { path: tempUpload, originalname } = req.file;
   const avatarsDir = path.join(__dirname, 'public', 'avatars');
   const resultUpload = path.join(avatarsDir, originalname);
   await fs.rename(tempUpload, resultUpload);
-  const avatar = path.join('public', 'avatars', originalname);
+  const avatar = path.join('avatars', originalname);
 
   /* Part of existing controller */
   const newUser = await User.create({
