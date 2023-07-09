@@ -4,7 +4,6 @@ const cors = require('cors');
 require('dotenv').config();
 const contactsRouter = require('./routes/api/contacts');
 const authRouter = require('./routes/api/auth');
-const multer = require('multer');
 
 const app = express();
 
@@ -18,26 +17,26 @@ app.use(express.static('public'));
 
 /* Move this section to multer middlewares */
 
-const path = require('path');
-const fs = require('fs/promises');
-const tempDir = path.join(__dirname, 'tmp');
-const multerConfig = multer.diskStorage({
-  destination: tempDir,
+// const path = require('path');
+// const fs = require('fs/promises');
+// const tempDir = path.join(__dirname, 'tmp');
+// const multerConfig = multer.diskStorage({
+//   destination: tempDir,
 
-  // Additional settings:
-  // limits: {
-  //   fileSize: 1048576,
-  // },
-  // If you ned to rename file on save, use this:
-  filename: (req, file, cb) => {
-    // cb - callBack function
-    cb(null, file.originalname);
-  },
-});
+//   // Additional settings:
+//   // limits: {
+//   //   fileSize: 1048576,
+//   // },
+//   // If you ned to rename file on save, use this:
+//   filename: (req, file, cb) => {
+//     // cb - callBack function
+//     cb(null, file.originalname);
+//   },
+// });
 
-const upload = multer({
-  storage: multerConfig,
-});
+// const upload = multer({
+//   storage: multerConfig,
+// });
 
 /* ^^^^^^ */
 
@@ -49,25 +48,26 @@ app.use((req, res) => {
 });
 
 /* Move upload.single('avatar') to auth router */
+// const fs = require('fs/promises');
+// const path = require('path');
+// // 'avatar' in a upload.single('avatar') determines from which field the multer should take the file
+// app.post('/register', upload.single('avatar'), async (req, res) => {
+//   /* !!! Move this section to registerUser controller !!! */
+//   const { path: tempUpload, originalname } = req.file;
+//   const avatarsDir = path.join(__dirname, 'public', 'avatars');
+//   const resultUpload = path.join(avatarsDir, originalname);
+//   await fs.rename(tempUpload, resultUpload);
+//   const avatar = path.join('avatars', originalname);
 
-// 'avatar' in a upload.single('avatar') determines from which field the multer should take the file
-app.post('/register', upload.single('avatar'), async (req, res) => {
-  /* !!! Move this section to registerUser controller !!! */
-  const { path: tempUpload, originalname } = req.file;
-  const avatarsDir = path.join(__dirname, 'public', 'avatars');
-  const resultUpload = path.join(avatarsDir, originalname);
-  await fs.rename(tempUpload, resultUpload);
-  const avatar = path.join('avatars', originalname);
-
-  /* Part of existing controller */
-  const newUser = await User.create({
-    ...req.body,
-    password: hashPassword,
-    avatar,
-  });
-  // console.log(req.body);
-  // console.log(req.file);
-});
+//   /* Part of existing controller */
+//   const newUser = await User.create({
+//     ...req.body,
+//     password: hashPassword,
+//     avatar,
+//   });
+//   // console.log(req.body);
+//   // console.log(req.file);
+// });
 
 // for multiple files use this:
 // upload.array("avatar", 8)
