@@ -15,67 +15,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-/* Move this section to multer middlewares */
-
-// const path = require('path');
-// const fs = require('fs/promises');
-// const tempDir = path.join(__dirname, 'tmp');
-// const multerConfig = multer.diskStorage({
-//   destination: tempDir,
-
-//   // Additional settings:
-//   // limits: {
-//   //   fileSize: 1048576,
-//   // },
-//   // If you ned to rename file on save, use this:
-//   filename: (req, file, cb) => {
-//     // cb - callBack function
-//     cb(null, file.originalname);
-//   },
-// });
-
-// const upload = multer({
-//   storage: multerConfig,
-// });
-
-/* ^^^^^^ */
-
 app.use('/api/contacts', contactsRouter);
 app.use('/api/auth', authRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
 });
-
-/* Move upload.single('avatar') to auth router */
-// const fs = require('fs/promises');
-// const path = require('path');
-// // 'avatar' in a upload.single('avatar') determines from which field the multer should take the file
-// app.post('/register', upload.single('avatar'), async (req, res) => {
-//   /* !!! Move this section to registerUser controller !!! */
-//   const { path: tempUpload, originalname } = req.file;
-//   const avatarsDir = path.join(__dirname, 'public', 'avatars');
-//   const resultUpload = path.join(avatarsDir, originalname);
-//   await fs.rename(tempUpload, resultUpload);
-//   const avatar = path.join('avatars', originalname);
-
-//   /* Part of existing controller */
-//   const newUser = await User.create({
-//     ...req.body,
-//     password: hashPassword,
-//     avatar,
-//   });
-//   // console.log(req.body);
-//   // console.log(req.file);
-// });
-
-// for multiple files use this:
-// upload.array("avatar", 8)
-
-// for multiple files in different fields, use this:
-// upload.fields([{name: "avatar1", maxCount: 3"}, {name: "avatar2", maxCount: 5"}])
-
-/* ^^^ Move to registerUser controller ^^^ */
 
 /* Error handler */
 app.use((err, req, res, next) => {
