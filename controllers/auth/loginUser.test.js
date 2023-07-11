@@ -6,8 +6,8 @@ mongoose.set('strictQuery', true);
 
 describe('loginUser', function () {
   let server;
-  beforeAll(async () => {
-    await mongoose
+  beforeAll(() => {
+    mongoose
       .connect(DB_HOST)
       .then(() => {
         server = app.listen(3000);
