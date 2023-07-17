@@ -15,7 +15,7 @@ const getAllContacts = async (req, res) => {
   const skip = (page - 1) * limit;
   let contacts;
 
-  if (Object.hasOwn(req.query, 'favorite')) {
+  if (req.query.hasOwnProperty('favorite')) {
     contacts = await Contact.find(
       { owner, favorite },
       '-createdAt -updatedAt',
