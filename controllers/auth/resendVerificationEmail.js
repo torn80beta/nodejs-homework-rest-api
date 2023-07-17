@@ -10,13 +10,13 @@ const resendVerificationEmail = async (req, res) => {
     throw httpError(401, 'User not fount');
   }
   if (user.verify) {
-    throw httpError(401, 'Email already verified');
+    throw httpError(400, 'Verification has already been passed');
   }
 
   const verifyEmail = {
     to: email,
     subject: 'Verification  email',
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationCode}">Follow this link to verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Follow this link to verify email</a>`,
   };
 
   await sendEmail(verifyEmail);

@@ -15,19 +15,19 @@ const registerUser = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
-  const verificationCode = nanoid();
+  const verificationToken = nanoid();
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
-    verificationCode,
+    verificationToken,
   });
 
   const verifyEmail = {
     to: email,
     subject: 'Verification  email',
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationCode}">Follow this link to verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Follow this link to verify email</a>`,
   };
 
   await sendEmail(verifyEmail);
